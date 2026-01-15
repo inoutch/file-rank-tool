@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Heart } from "lucide-react";
+import { FolderOpen, Heart } from "lucide-react";
 import { FilePreview } from "../../components/FilePreview/FilePreview";
 
 type SortOperation =
@@ -195,6 +195,10 @@ export function Ranking() {
     [currentCandidate, currentPartition, displayPair.isPivotLeft, ranking]
   );
 
+  const handleOpenFolder = async (filePath: string) => {
+    await window.fileRank.openFileFolder(filePath);
+  };
+
   useEffect(() => {
     if (!currentPivot || !currentCandidate) {
       return;
@@ -301,34 +305,62 @@ export function Ranking() {
                 <div className="grid min-h-0 flex-1 grid-cols-2 gap-6">
                   {currentPivot && currentCandidate ? (
                     <>
-                      <FilePreview
-                        filePath={
-                          displayPair.isPivotLeft
-                            ? currentPivot.path
-                            : currentCandidate.path
-                        }
-                        category={resolveCategory(
-                          displayPair.isPivotLeft
-                            ? currentPivot.path
-                            : currentCandidate.path,
-                          extensionCategoryMap
-                        )}
-                        label="LEFT"
-                      />
-                      <FilePreview
-                        filePath={
-                          displayPair.isPivotLeft
-                            ? currentCandidate.path
-                            : currentPivot.path
-                        }
-                        category={resolveCategory(
-                          displayPair.isPivotLeft
-                            ? currentCandidate.path
-                            : currentPivot.path,
-                          extensionCategoryMap
-                        )}
-                        label="RIGHT"
-                      />
+                      {(() => {
+                        const leftPath = displayPair.isPivotLeft
+                          ? currentPivot.path
+                          : currentCandidate.path;
+                        const rightPath = displayPair.isPivotLeft
+                          ? currentCandidate.path
+                          : currentPivot.path;
+                        return (
+                          <>
+                            <div className="flex min-h-0 flex-1 flex-col gap-3">
+                              <div className="flex items-center justify-between text-xs uppercase tracking-[0.32em] text-[color:var(--color-muted)]">
+                                <span>LEFT</span>
+                                <button
+                                  className="rounded-full border border-[color:var(--color-outline)] p-2 text-[color:var(--color-muted)] transition hover:border-[rgba(45,212,191,0.6)] hover:text-[color:var(--color-ink)]"
+                                  type="button"
+                                  aria-label="フォルダで開く"
+                                  title="フォルダで開く"
+                                  onClick={() => handleOpenFolder(leftPath)}
+                                >
+                                  <FolderOpen className="h-4 w-4" />
+                                </button>
+                              </div>
+                              <FilePreview
+                                filePath={leftPath}
+                                category={resolveCategory(
+                                  leftPath,
+                                  extensionCategoryMap
+                                )}
+                                label="LEFT"
+                              />
+                            </div>
+                            <div className="flex min-h-0 flex-1 flex-col gap-3">
+                              <div className="flex items-center justify-between text-xs uppercase tracking-[0.32em] text-[color:var(--color-muted)]">
+                                <span>RIGHT</span>
+                                <button
+                                  className="rounded-full border border-[color:var(--color-outline)] p-2 text-[color:var(--color-muted)] transition hover:border-[rgba(45,212,191,0.6)] hover:text-[color:var(--color-ink)]"
+                                  type="button"
+                                  aria-label="フォルダで開く"
+                                  title="フォルダで開く"
+                                  onClick={() => handleOpenFolder(rightPath)}
+                                >
+                                  <FolderOpen className="h-4 w-4" />
+                                </button>
+                              </div>
+                              <FilePreview
+                                filePath={rightPath}
+                                category={resolveCategory(
+                                  rightPath,
+                                  extensionCategoryMap
+                                )}
+                                label="RIGHT"
+                              />
+                            </div>
+                          </>
+                        );
+                      })()}
                     </>
                   ) : (
                     <div className="col-span-full flex flex-1 flex-col items-center justify-center gap-4 text-sm text-[color:var(--color-muted)]">
