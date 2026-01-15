@@ -1,5 +1,6 @@
 type NewRankingFormProps = {
   themeName: string;
+  folderPath: string;
   isNextEnabled: boolean;
   onThemeNameChange: (value: string) => void;
   onBack: () => void;
@@ -8,6 +9,7 @@ type NewRankingFormProps = {
 
 export function NewRankingForm({
   themeName,
+  folderPath,
   isNextEnabled,
   onThemeNameChange,
   onBack,
@@ -25,7 +27,7 @@ export function NewRankingForm({
       }}
     >
       <div className="flex items-center justify-between text-xs uppercase tracking-[0.32em] text-[color:var(--color-muted)]">
-        <span>Step 1/3</span>
+        <span>Step 3/3</span>
         <span>テーマ名</span>
       </div>
 
@@ -35,6 +37,9 @@ export function NewRankingForm({
           <p className="mt-2 text-sm text-[color:var(--color-muted)]">
             ランキングの軸になるテーマ名を入力してください。
           </p>
+        </div>
+        <div className="w-full max-w-md rounded-2xl border border-[color:var(--color-outline)] bg-[color:var(--color-panel)] px-4 py-3 text-left text-xs text-[color:var(--color-muted)]">
+          {folderPath || "フォルダが選択されていません"}
         </div>
         <div className="w-full max-w-md">
           <input
@@ -59,7 +64,7 @@ export function NewRankingForm({
           type="submit"
           disabled={!isNextEnabled}
         >
-          次へ
+          ランク付け開始
         </button>
       </div>
     </form>

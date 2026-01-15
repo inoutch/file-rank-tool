@@ -25,7 +25,7 @@ export function NewRankingFolderForm({
       }}
     >
       <div className="flex items-center justify-between text-xs uppercase tracking-[0.32em] text-[color:var(--color-muted)]">
-        <span>Step 2/3</span>
+        <span>Step 1/3</span>
         <span>フォルダ選択</span>
       </div>
 

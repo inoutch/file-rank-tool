@@ -54,11 +54,20 @@ export function Index() {
         <main className="flex min-h-0 flex-1 flex-col">
           <section className="flex min-h-0 flex-1 flex-col gap-6 rounded-[28px] border border-[color:var(--color-outline)] bg-[color:var(--color-surface)] p-8 shadow-[var(--shadow-soft)]">
             <div className="flex flex-col gap-4">
-              <div>
-                <h2 className="text-lg font-semibold">ファイルランキング</h2>
-                <p className="mt-1 text-sm text-[color:var(--color-muted)]">
-                  最近作成したランキングの一覧です。
-                </p>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h2 className="text-lg font-semibold">ファイルランキング</h2>
+                  <p className="mt-1 text-sm text-[color:var(--color-muted)]">
+                    最近作成したランキングの一覧です。
+                  </p>
+                </div>
+                <button
+                  className="rounded-full border border-[color:var(--color-outline)] px-3 py-1 text-[11px] font-semibold text-[color:var(--color-muted)] transition hover:border-[rgba(148,163,184,0.6)] hover:text-[color:var(--color-ink)]"
+                  type="button"
+                  onClick={() => window.fileRank.openRankingsFolder()}
+                >
+                  保存先を開く
+                </button>
               </div>
             </div>
 
@@ -69,6 +78,9 @@ export function Index() {
                   onStartRanking={(rankingId) => navigate(`/rank/${rankingId}`)}
                   onViewRanking={(rankingId) =>
                     navigate(`/rank/${rankingId}/view`)
+                  }
+                  onEditRanking={(rankingId) =>
+                    navigate(`/rank/${rankingId}/edit`)
                   }
                   onDeleteRanking={handleDeleteRanking}
                 />

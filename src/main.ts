@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, dialog, ipcMain, protocol } from "electron";
+import { app, BrowserWindow, Menu, dialog, ipcMain, protocol, shell } from "electron";
 import crypto from "crypto";
 import fs from "fs/promises";
 import path from "path";
@@ -73,6 +73,8 @@ function createMainWindow(): void {
     },
   });
 
+  const isDev = Boolean(devServerUrl);
+
   if (devServerUrl) {
     mainWindow.loadURL(devServerUrl);
     mainWindow.webContents.once("did-finish-load", () => {
@@ -83,6 +85,9 @@ function createMainWindow(): void {
   }
 
   mainWindow.webContents.on("before-input-event", (event, input) => {
+    if (!isDev) {
+      return;
+    }
     const isToggleDevTools =
       input.key === "F12" ||
       (input.control && input.shift && input.key.toLowerCase() === "i");
@@ -200,6 +205,55 @@ app.whenReady().then(() => {
       return store.rankings[index];
     }
   );
+
+  ipcMain.handle(
+    "update-ranking-title",
+    async (_event, payload: { rankingId: string; name: string }) => {
+      const store = await loadRankingsStore();
+      const index = store.rankings.findIndex(
+        (item) => item.id === payload.rankingId
+      );
+      if (index === -1) {
+        return null;
+      }
+      store.rankings[index].name = payload.name;
+      store.rankings[index].updatedAt = new Date().toISOString();
+      await saveRankingsStore(store);
+      return store.rankings[index];
+    }
+  );
+
+  ipcMain.handle("reset-ranking-data", async (_event, rankingId: string) => {
+    const store = await loadRankingsStore();
+    const index = store.rankings.findIndex((item) => item.id === rankingId);
+    if (index === -1) {
+      return null;
+    }
+    store.rankings[index].matches = [];
+    store.rankings[index].status =
+      store.rankings[index].files.length <= 1 ? "Complete" : "Progress";
+    store.rankings[index].updatedAt = new Date().toISOString();
+    await saveRankingsStore(store);
+    return store.rankings[index];
+  });
+
+  ipcMain.handle("open-file-folder", async (_event, filePath: string) => {
+    try {
+      shell.showItemInFolder(filePath);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
+  ipcMain.handle("open-rankings-folder", async () => {
+    try {
+      const result = await shell.openPath(app.getPath("userData"));
+      return result === "";
+    } catch {
+      return false;
+    }
+  });
 
   ipcMain.handle(
     "create-ranking",

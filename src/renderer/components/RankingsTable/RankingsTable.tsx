@@ -10,6 +10,7 @@ type RankingsTableProps = {
   rankings: RankingSummary[];
   onStartRanking: (rankingId: string) => void;
   onViewRanking: (rankingId: string) => void;
+  onEditRanking: (rankingId: string) => void;
   onDeleteRanking: (rankingId: string) => void;
 };
 
@@ -17,6 +18,7 @@ export function RankingsTable({
   rankings,
   onStartRanking,
   onViewRanking,
+  onEditRanking,
   onDeleteRanking,
 }: RankingsTableProps) {
   return (
@@ -89,6 +91,13 @@ export function RankingsTable({
                       ランク付け
                     </button>
                   )}
+                  <button
+                    className="rounded-full border border-[rgba(148,163,184,0.6)] bg-[rgba(148,163,184,0.08)] px-4 py-2 text-xs font-semibold text-[color:var(--color-muted)] transition hover:border-[rgba(148,163,184,0.9)] hover:text-[color:var(--color-ink)]"
+                    type="button"
+                    onClick={() => onEditRanking(ranking.id)}
+                  >
+                    編集
+                  </button>
                   <button
                     className="rounded-full border border-[rgba(248,113,113,0.6)] bg-[rgba(248,113,113,0.08)] px-4 py-2 text-xs font-semibold text-[rgba(248,113,113,0.9)] transition hover:border-[rgba(248,113,113,0.9)]"
                     type="button"

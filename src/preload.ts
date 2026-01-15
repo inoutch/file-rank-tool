@@ -13,6 +13,14 @@ contextBridge.exposeInMainWorld("fileRank", {
     ipcRenderer.invoke("append-match", payload) as Promise<boolean>,
   updateRankingStatus: (payload: UpdateRankingStatusPayload) =>
     ipcRenderer.invoke("update-ranking-status", payload) as Promise<RankingRecord | null>,
+  updateRankingTitle: (payload: UpdateRankingTitlePayload) =>
+    ipcRenderer.invoke("update-ranking-title", payload) as Promise<RankingRecord | null>,
+  resetRankingData: (rankingId: string) =>
+    ipcRenderer.invoke("reset-ranking-data", rankingId) as Promise<RankingRecord | null>,
+  openFileFolder: (filePath: string) =>
+    ipcRenderer.invoke("open-file-folder", filePath) as Promise<boolean>,
+  openRankingsFolder: () =>
+    ipcRenderer.invoke("open-rankings-folder") as Promise<boolean>,
   undoLastMatch: (rankingId: string) =>
     ipcRenderer.invoke("undo-last-match", rankingId) as Promise<RankingRecord | null>,
   deleteRanking: (rankingId: string) =>
@@ -92,4 +100,9 @@ type AppendMatchPayload = {
 type UpdateRankingStatusPayload = {
   rankingId: string;
   status: RankingStatus;
+};
+
+type UpdateRankingTitlePayload = {
+  rankingId: string;
+  name: string;
 };

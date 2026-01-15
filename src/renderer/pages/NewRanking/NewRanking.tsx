@@ -4,7 +4,7 @@ import { NewRankingExtensionsForm } from "../../components/NewRankingExtensionsF
 import { NewRankingFolderForm } from "../../components/NewRankingFolderForm/NewRankingFolderForm";
 import { NewRankingForm } from "../../components/NewRankingForm/NewRankingForm";
 
-type Step = "theme" | "folder" | "extensions";
+type Step = "folder" | "extensions" | "theme";
 
 type ScanCategory = "image" | "video" | "audio" | "text" | "other";
 
@@ -28,7 +28,7 @@ export function NewRanking() {
   const navigate = useNavigate();
   const [themeName, setThemeName] = useState("");
   const [selectedFolder, setSelectedFolder] = useState("");
-  const [step, setStep] = useState<Step>("theme");
+  const [step, setStep] = useState<Step>("folder");
   const isNextEnabled = themeName.trim().length > 0;
   const [scanStatus, setScanStatus] = useState<"scanning" | "done" | "canceled">(
     "scanning"
@@ -136,20 +136,11 @@ export function NewRanking() {
 
         <main className="flex min-h-0 flex-1">
           <section className="mx-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col rounded-[28px] border border-[color:var(--color-outline)] bg-[color:var(--color-surface)] p-8 shadow-[var(--shadow-soft)]">
-            {step === "theme" ? (
-              <NewRankingForm
-                themeName={themeName}
-                isNextEnabled={isNextEnabled}
-                onThemeNameChange={setThemeName}
-                onBack={() => navigate(-1)}
-                onNext={() => setStep("folder")}
-              />
-            ) : null}
             {step === "folder" ? (
               <NewRankingFolderForm
                 selectedPath={selectedFolder}
                 onSelectFolder={handleSelectFolder}
-                onBack={() => setStep("theme")}
+                onBack={() => navigate(-1)}
                 onNext={() => setStep("extensions")}
               />
             ) : null}
@@ -161,6 +152,16 @@ export function NewRanking() {
                 selectedExtensions={selectedExtensions}
                 onToggleExtension={handleToggleExtension}
                 onBack={handleBackFromExtensions}
+                onNext={() => setStep("theme")}
+              />
+            ) : null}
+            {step === "theme" ? (
+              <NewRankingForm
+                themeName={themeName}
+                folderPath={selectedFolder}
+                isNextEnabled={isNextEnabled}
+                onThemeNameChange={setThemeName}
+                onBack={() => setStep("extensions")}
                 onNext={handleStartRanking}
               />
             ) : null}

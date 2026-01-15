@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Clipboard, File, FileText, Music } from "lucide-react";
+import { Clipboard, File, FileText, FolderOpen, Music } from "lucide-react";
 import { FilePreview } from "../../components/FilePreview/FilePreview";
 import { getFileName } from "../../utilities/getFileName";
 import { toFileUrl } from "../../utilities/toFileUrl";
@@ -127,6 +127,15 @@ export function RankingView() {
     } catch {
       setToastMessage("コピーに失敗しました");
     }
+  };
+
+  const handleOpenFolder = async (
+    event: MouseEvent<HTMLButtonElement>,
+    filePath: string
+  ) => {
+    event.stopPropagation();
+    const opened = await window.fileRank.openFileFolder(filePath);
+    setToastMessage(opened ? "フォルダを開きました" : "フォルダを開けませんでした");
   };
 
   return (
@@ -261,6 +270,15 @@ export function RankingView() {
                               onClick={(event) => handleCopyPath(event, file.path)}
                             >
                               <Clipboard className="h-4 w-4" />
+                            </button>
+                            <button
+                              className="rounded-full border border-[color:var(--color-outline)] p-2 text-[color:var(--color-muted)] transition hover:border-[rgba(45,212,191,0.6)] hover:text-[color:var(--color-ink)]"
+                              type="button"
+                              aria-label="フォルダで開く"
+                              title="フォルダで開く"
+                              onClick={(event) => handleOpenFolder(event, file.path)}
+                            >
+                              <FolderOpen className="h-4 w-4" />
                             </button>
                           </div>
                         );

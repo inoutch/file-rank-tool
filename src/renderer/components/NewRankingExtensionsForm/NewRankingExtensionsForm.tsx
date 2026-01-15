@@ -63,7 +63,7 @@ export function NewRankingExtensionsForm({
       }}
     >
       <div className="flex items-center justify-between text-xs uppercase tracking-[0.32em] text-[color:var(--color-muted)]">
-        <span>Step 3/3</span>
+        <span>Step 2/3</span>
         <span>拡張子選択</span>
       </div>
 
@@ -163,7 +163,7 @@ export function NewRankingExtensionsForm({
           type="submit"
           disabled={!canProceed}
         >
-          ランク付け開始
+          次へ
         </button>
       </div>
     </form>

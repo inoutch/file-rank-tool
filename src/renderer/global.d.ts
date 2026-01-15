@@ -12,6 +12,12 @@ declare global {
       updateRankingStatus: (
         payload: UpdateRankingStatusPayload
       ) => Promise<RankingRecord | null>;
+      updateRankingTitle: (
+        payload: UpdateRankingTitlePayload
+      ) => Promise<RankingRecord | null>;
+      resetRankingData: (rankingId: string) => Promise<RankingRecord | null>;
+      openFileFolder: (filePath: string) => Promise<boolean>;
+      openRankingsFolder: () => Promise<boolean>;
       undoLastMatch: (rankingId: string) => Promise<RankingRecord | null>;
       deleteRanking: (rankingId: string) => Promise<boolean>;
       readTextPreview: (filePath: string) => Promise<string | null>;
@@ -83,4 +89,9 @@ type AppendMatchPayload = {
 type UpdateRankingStatusPayload = {
   rankingId: string;
   status: RankingStatus;
+};
+
+type UpdateRankingTitlePayload = {
+  rankingId: string;
+  name: string;
 };

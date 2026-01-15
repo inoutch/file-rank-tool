@@ -10,6 +10,7 @@
     "build": "npm run build:main && npm run build:renderer",
     "build:main": "tsc -p tsconfig.main.json",
     "build:renderer": "vite build",
+    "build:win": "npm run build && electron-builder --win --x64 --publish never",
     "dev": "concurrently -k \"npm:dev:renderer\" \"npm:dev:main\" \"npm:dev:electron\"",
     "dev:renderer": "vite",
     "dev:main": "tsc -p tsconfig.main.json -w",
@@ -27,6 +28,7 @@
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "electron": "^39.2.7",
+    "electron-builder": "^26.0.12",
     "electronmon": "^2.0.4",
     "postcss": "^8.5.6",
     "react": "^19.1.1",
@@ -42,5 +44,22 @@
     "lucide-react": "^0.562.0",
     "react-router-dom": "^7.12.0",
     "sanitize.css": "^13.0.0"
+  },
+  "build": {
+    "appId": "com.inoue.file-rank-tool",
+    "productName": "File Rank Tool",
+    "asar": true,
+    "directories": {
+      "output": "dist/release"
+    },
+    "files": [
+      "dist/main/**/*",
+      "dist/renderer/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": ["nsis"],
+      "artifactName": "File-Rank-Tool-${version}-win.${ext}"
+    }
   }
 }
