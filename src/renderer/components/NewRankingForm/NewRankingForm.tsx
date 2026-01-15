@@ -38,9 +38,6 @@ export function NewRankingForm({
             ランキングの軸になるテーマ名を入力してください。
           </p>
         </div>
-        <div className="w-full max-w-md rounded-2xl border border-[color:var(--color-outline)] bg-[color:var(--color-panel)] px-4 py-3 text-left text-xs text-[color:var(--color-muted)]">
-          {folderPath || "フォルダが選択されていません"}
-        </div>
         <div className="w-full max-w-md">
           <input
             className="mt-3 w-full rounded-2xl border border-[color:var(--color-outline)] bg-[color:var(--color-panel)] px-4 py-3 text-base text-[color:var(--color-ink)] outline-none transition focus:border-[rgba(45,212,191,0.7)] focus:ring-2 focus:ring-[rgba(45,212,191,0.3)]"
@@ -48,6 +45,9 @@ export function NewRankingForm({
             value={themeName}
             onChange={(event) => onThemeNameChange(event.target.value)}
           />
+          <p className="mt-3 text-center text-xs text-[color:var(--color-muted)]">
+            {folderPath || "フォルダが選択されていません"}
+          </p>
         </div>
       </div>
 

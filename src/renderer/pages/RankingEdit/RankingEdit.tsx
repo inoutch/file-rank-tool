@@ -39,6 +39,7 @@ export function RankingEdit() {
     if (updated) {
       setRanking(updated);
       setName(updated.name);
+      navigate("/");
     }
   };
 

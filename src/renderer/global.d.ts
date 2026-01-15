@@ -1,3 +1,5 @@
+import type { RankingStatus } from "./types/ranking";
+
 export {};
 
 declare global {
@@ -29,7 +31,6 @@ declare global {
 
 type ScanCategory = "image" | "video" | "audio" | "text" | "other";
 
-type RankingStatus = "Progress" | "Complete";
 
 type ExtensionItem = {
   extension: string;

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
 import { FooterBar } from "../../components/FooterBar/FooterBar";
 import { RankingsTable } from "../../components/RankingsTable/RankingsTable";
+import type { RankingStatus } from "../../types/ranking";
 
 type Ranking = {
   id: string;

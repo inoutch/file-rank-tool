@@ -1,3 +1,6 @@
+import { Pencil, Trash2 } from "lucide-react";
+import type { RankingStatus } from "../../types/ranking";
+
 type RankingSummary = {
   id: string;
   name: string;
@@ -35,7 +38,7 @@ export function RankingsTable({
             <th className="sticky top-0 z-10 bg-[color:var(--color-surface)] px-5 py-3 font-medium">
               更新日
             </th>
-            <th className="sticky top-0 z-10 bg-[color:var(--color-surface)] px-5 py-3 text-right font-medium">
+            <th className="sticky top-0 z-10 min-w-[320px] bg-[color:var(--color-surface)] px-5 py-3 text-right font-medium">
               操作
             </th>
           </tr>
@@ -49,7 +52,7 @@ export function RankingsTable({
               <td className="px-5 py-3 text-[15px] text-[color:var(--color-ink)]">
                 <div className="flex items-center gap-3">
                   <span
-                    className={`h-2.5 w-2.5 rounded-full shadow-[0_0_12px_rgba(45,212,191,0.35)] ${
+                    className={`h-2.5 w-2.5 flex-shrink-0 rounded-full shadow-[0_0_12px_rgba(45,212,191,0.35)] ${
                       ranking.status === "Complete"
                         ? "bg-[rgba(34,197,94,0.95)]"
                         : "bg-[rgba(234,179,8,0.95)]"
@@ -72,7 +75,7 @@ export function RankingsTable({
               <td className="px-5 py-3 text-xs text-[color:var(--color-muted)]">
                 {formatUpdatedAt(ranking.updatedAt)}
               </td>
-              <td className="px-5 py-3">
+              <td className="min-w-[320px] px-5 py-3">
                 <div className="flex items-center justify-end gap-2">
                   {ranking.status === "Complete" ? (
                     <button
@@ -95,15 +98,19 @@ export function RankingsTable({
                     className="rounded-full border border-[rgba(148,163,184,0.6)] bg-[rgba(148,163,184,0.08)] px-4 py-2 text-xs font-semibold text-[color:var(--color-muted)] transition hover:border-[rgba(148,163,184,0.9)] hover:text-[color:var(--color-ink)]"
                     type="button"
                     onClick={() => onEditRanking(ranking.id)}
+                    aria-label="編集"
+                    title="編集"
                   >
-                    編集
+                    <Pencil className="h-4 w-4" />
                   </button>
                   <button
                     className="rounded-full border border-[rgba(248,113,113,0.6)] bg-[rgba(248,113,113,0.08)] px-4 py-2 text-xs font-semibold text-[rgba(248,113,113,0.9)] transition hover:border-[rgba(248,113,113,0.9)]"
                     type="button"
                     onClick={() => onDeleteRanking(ranking.id)}
+                    aria-label="削除"
+                    title="削除"
                   >
-                    削除
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               </td>
