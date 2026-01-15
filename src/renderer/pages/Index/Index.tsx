@@ -1,31 +1,29 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
 import { FooterBar } from "../../components/FooterBar/FooterBar";
 import { RankingsTable } from "../../components/RankingsTable/RankingsTable";
-
-type FileType = "image" | "music" | "video" | "text" | "other";
 
 type Ranking = {
   id: string;
   name: string;
   folderPath: string;
-  fileType: FileType;
-  isRanked: boolean;
+  status: RankingStatus;
 };
 
-const storageKey = "file-rank-tool.rankings";
-
-function loadRankings(): Ranking[] {
-  const raw = localStorage.getItem(storageKey);
-  if (!raw) {
-    return [];
-  }
-  return JSON.parse(raw) as Ranking[];
-}
-
 export function Index() {
-  const [rankings] = useState<Ranking[]>(() => loadRankings());
+  const [rankings, setRankings] = useState<Ranking[]>([]);
   const hasRankings = rankings.length > 0;
+  const navigate = useNavigate();
+
+  const loadRankings = useCallback(async () => {
+    const items = await window.fileRank.getRankings();
+    setRankings(items);
+  }, []);
+
+  useEffect(() => {
+    loadRankings();
+  }, [loadRankings]);
 
   const tableItems = useMemo(
     () =>
@@ -33,9 +31,21 @@ export function Index() {
         id: ranking.id,
         name: ranking.name,
         folderPath: ranking.folderPath,
+        status: ranking.status,
       })),
     [rankings]
   );
+
+  const handleDeleteRanking = async (rankingId: string) => {
+    const shouldDelete = window.confirm(
+      "このランキングを削除しますか？この操作は取り消せません。"
+    );
+    if (!shouldDelete) {
+      return;
+    }
+    await window.fileRank.deleteRanking(rankingId);
+    await loadRankings();
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[color:var(--color-bg)] text-[color:var(--color-ink)]">
@@ -53,7 +63,14 @@ export function Index() {
 
             <div className="flex h-full min-h-0 flex-1 flex-col">
               {hasRankings ? (
-                <RankingsTable rankings={tableItems} />
+                <RankingsTable
+                  rankings={tableItems}
+                  onStartRanking={(rankingId) => navigate(`/rank/${rankingId}`)}
+                  onViewRanking={(rankingId) =>
+                    navigate(`/rank/${rankingId}/view`)
+                  }
+                  onDeleteRanking={handleDeleteRanking}
+                />
               ) : (
                 <EmptyState
                   title="まだランキングがありません"
@@ -64,7 +81,7 @@ export function Index() {
           </section>
         </main>
 
-        <FooterBar onCreate={() => undefined} />
+        <FooterBar onCreate={() => navigate("/new")} />
       </div>
     </div>
   );

@@ -37,4 +37,31 @@
   ::selection {
     background: rgba(45, 212, 191, 0.25);
   }
+
+  button:enabled {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@keyframes toast-fade {
+  0% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.toast-fade {
+  animation: toast-fade 2.4s ease forwards;
 }
