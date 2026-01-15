@@ -32,6 +32,7 @@ export function Index() {
         name: ranking.name,
         folderPath: ranking.folderPath,
         status: ranking.status,
+        updatedAt: ranking.updatedAt,
       })),
     [rankings]
   );
@@ -48,13 +49,13 @@ export function Index() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[color:var(--color-bg)] text-[color:var(--color-ink)]">
-      <div className="mx-auto flex min-h-screen max-w-6xl flex-col gap-6 px-6 pb-10 pt-10">
+    <div className="relative h-screen overflow-hidden bg-[color:var(--color-bg)] text-[color:var(--color-ink)]">
+      <div className="mx-auto flex h-full max-w-6xl flex-col gap-6 px-6 pb-8 pt-8">
         <main className="flex min-h-0 flex-1 flex-col">
           <section className="flex min-h-0 flex-1 flex-col gap-6 rounded-[28px] border border-[color:var(--color-outline)] bg-[color:var(--color-surface)] p-8 shadow-[var(--shadow-soft)]">
-            <div className="flex h-full flex-1 flex-col gap-4">
+            <div className="flex flex-col gap-4">
               <div>
-                <h2 className="text-lg font-semibold">ランキング</h2>
+                <h2 className="text-lg font-semibold">ファイルランキング</h2>
                 <p className="mt-1 text-sm text-[color:var(--color-muted)]">
                   最近作成したランキングの一覧です。
                 </p>

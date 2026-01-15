@@ -53,7 +53,7 @@ export function NewRankingExtensionsForm({
 
   return (
     <form
-      className="flex h-full flex-col gap-6"
+      className="flex min-h-0 flex-1 flex-col gap-6"
       onSubmit={(event) => {
         event.preventDefault();
         if (!canProceed) {
@@ -97,7 +97,7 @@ export function NewRankingExtensionsForm({
           </div>
         </div>
       ) : (
-        <div className="flex flex-1 flex-col gap-6">
+        <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-auto pr-1">
           {result ? (
             (Object.keys(categoryLabels) as ScanCategory[]).map((category) => {
               const items = result.categories[category] ?? [];

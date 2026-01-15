@@ -56,6 +56,7 @@ type RankingRecord = {
   matches: RankingMatch[];
   status: RankingStatus;
   createdAt: string;
+  updatedAt: string;
 };
 
 type RankingsStore = {
@@ -194,6 +195,7 @@ app.whenReady().then(() => {
         return null;
       }
       store.rankings[index].status = payload.status;
+      store.rankings[index].updatedAt = new Date().toISOString();
       await saveRankingsStore(store);
       return store.rankings[index];
     }
@@ -222,6 +224,7 @@ app.whenReady().then(() => {
         matches: [],
         status: files.length <= 1 ? "Complete" : "Progress",
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
       const store = await loadRankingsStore();
       store.rankings.unshift(record);
@@ -244,6 +247,7 @@ app.whenReady().then(() => {
       if (store.rankings[index].status === "Complete") {
         store.rankings[index].status = "Progress";
       }
+      store.rankings[index].updatedAt = new Date().toISOString();
       await saveRankingsStore(store);
       return true;
     }
@@ -263,6 +267,7 @@ app.whenReady().then(() => {
     if (store.rankings[index].status === "Complete") {
       store.rankings[index].status = "Progress";
     }
+    store.rankings[index].updatedAt = new Date().toISOString();
     await saveRankingsStore(store);
     return store.rankings[index];
   });
@@ -536,12 +541,16 @@ async function saveRankingsStore(store: RankingsStore): Promise<void> {
 }
 
 function normalizeRankingRecord(record: RankingRecord): RankingRecord {
+  const createdAt = record.createdAt ?? new Date().toISOString();
+  const updatedAt = record.updatedAt ?? createdAt;
   return {
     ...record,
     extensions: Array.isArray(record.extensions) ? record.extensions : [],
     files: Array.isArray(record.files) ? record.files : [],
     matches: Array.isArray(record.matches) ? record.matches : [],
     status: record.status === "Complete" ? "Complete" : "Progress",
+    createdAt,
+    updatedAt,
   };
 }
 

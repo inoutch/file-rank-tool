@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Heart } from "lucide-react";
 import { FilePreview } from "../../components/FilePreview/FilePreview";
@@ -42,6 +42,8 @@ export function Ranking() {
     key: string;
     isPivotLeft: boolean;
   }>({ key: "", isPivotLeft: true });
+  const [recentDurations, setRecentDurations] = useState<number[]>([]);
+  const lastDecisionAtRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!rankingId) {
@@ -135,6 +137,12 @@ export function Ranking() {
     0,
     estimatedTotal - sortState.comparisonsDone
   );
+  const estimatedSeconds = estimateRemainingSeconds(
+    remainingComparisons,
+    recentDurations
+  );
+  const estimatedLabel =
+    estimatedSeconds === null ? "計測中" : formatDuration(estimatedSeconds);
   const progressRate =
     estimatedTotal > 0
       ? Math.min(100, Math.round((sortState.comparisonsDone / estimatedTotal) * 100))
@@ -157,6 +165,17 @@ export function Ranking() {
     if (!ranking || !currentPartition || !currentCandidate) {
       return;
     }
+    const now = Date.now();
+    if (lastDecisionAtRef.current) {
+      const delta = now - lastDecisionAtRef.current;
+      if (delta > 0) {
+        setRecentDurations((prev) => {
+          const next = [...prev, delta].slice(-10);
+          return next;
+        });
+      }
+    }
+    lastDecisionAtRef.current = now;
     const pivotWins =
       side === "left" ? displayPair.isPivotLeft : !displayPair.isPivotLeft;
     const winnerId = pivotWins
@@ -218,8 +237,11 @@ export function Ranking() {
               中断
             </button>
             <div className="grid gap-1 text-right text-xs text-[color:var(--color-muted)]">
-              <div>
-                残り推定 {remainingComparisons.toLocaleString()} 比較
+              <div className="flex items-center justify-end gap-3">
+                <span>
+                  残り推定 {remainingComparisons.toLocaleString()} 比較
+                </span>
+                <span>所要 {estimatedLabel}</span>
               </div>
               <div>
                 進捗 {sortState.comparisonsDone.toLocaleString()} /{" "}
@@ -505,4 +527,32 @@ function resolveCategory(
 
 function buildMatchKey(leftId: string, rightId: string): string {
   return leftId < rightId ? `${leftId}|${rightId}` : `${rightId}|${leftId}`;
+}
+
+function estimateRemainingSeconds(
+  remainingComparisons: number,
+  recentDurations: number[]
+): number | null {
+  if (remainingComparisons === 0) {
+    return 0;
+  }
+  if (recentDurations.length === 0) {
+    return null;
+  }
+  const total = recentDurations.reduce((sum, value) => sum + value, 0);
+  const averageMs = total / recentDurations.length;
+  return Math.max(1, Math.round((averageMs * remainingComparisons) / 1000));
+}
+
+function formatDuration(seconds: number): string {
+  if (seconds >= 3600) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}時間${minutes}分`;
+  }
+  if (seconds >= 60) {
+    const minutes = Math.floor(seconds / 60);
+    return `${minutes}分`;
+  }
+  return `${seconds}秒`;
 }

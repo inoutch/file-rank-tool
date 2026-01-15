@@ -3,6 +3,7 @@ type RankingSummary = {
   name: string;
   folderPath: string;
   status: RankingStatus;
+  updatedAt: string;
 };
 
 type RankingsTableProps = {
@@ -21,11 +22,20 @@ export function RankingsTable({
   return (
     <div className="flex h-full min-h-0 flex-col overflow-auto rounded-2xl border border-[color:var(--color-outline)] bg-[color:var(--color-panel)]">
       <table className="w-full border-collapse text-left text-sm">
-        <thead className="bg-[color:var(--color-surface)] text-[11px] uppercase tracking-[0.28em] text-[color:var(--color-muted)]">
+        <thead className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--color-muted)]">
           <tr>
-            <th className="px-5 py-3 font-medium">名前</th>
-            <th className="px-5 py-3 font-medium">フォルダ</th>
-            <th className="px-5 py-3 text-right font-medium">操作</th>
+            <th className="sticky top-0 z-10 bg-[color:var(--color-surface)] px-5 py-3 font-medium">
+              名前
+            </th>
+            <th className="sticky top-0 z-10 bg-[color:var(--color-surface)] px-5 py-3 font-medium">
+              フォルダ
+            </th>
+            <th className="sticky top-0 z-10 bg-[color:var(--color-surface)] px-5 py-3 font-medium">
+              更新日
+            </th>
+            <th className="sticky top-0 z-10 bg-[color:var(--color-surface)] px-5 py-3 text-right font-medium">
+              操作
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -56,6 +66,9 @@ export function RankingsTable({
                 <span className="block max-w-[420px] truncate sm:max-w-none">
                   {ranking.folderPath}
                 </span>
+              </td>
+              <td className="px-5 py-3 text-xs text-[color:var(--color-muted)]">
+                {formatUpdatedAt(ranking.updatedAt)}
               </td>
               <td className="px-5 py-3">
                 <div className="flex items-center justify-end gap-2">
@@ -91,4 +104,19 @@ export function RankingsTable({
       </table>
     </div>
   );
+}
+
+function formatUpdatedAt(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "-";
+  }
+  return date.toLocaleString("ja-JP", {
+    hour12: false,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }

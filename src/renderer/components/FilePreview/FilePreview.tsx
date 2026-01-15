@@ -73,7 +73,14 @@ export function FilePreview({ filePath, category, label }: FilePreviewProps) {
             />
           ) : null}
           {category === "video" ? (
-            <video className="h-full w-full" controls preload="metadata">
+            <video
+              className="h-full w-full"
+              controls
+              preload="metadata"
+              autoPlay
+              muted
+              playsInline
+            >
               <source src={fileUrl} />
             </video>
           ) : null}

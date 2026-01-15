@@ -72,6 +72,7 @@ type RankingRecord = {
   matches: RankingMatch[];
   status: RankingStatus;
   createdAt: string;
+  updatedAt: string;
 };
 
 type AppendMatchPayload = {

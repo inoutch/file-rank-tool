@@ -114,14 +114,14 @@ export function NewRanking() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[color:var(--color-bg)] text-[color:var(--color-ink)]">
+    <div className="relative h-screen overflow-hidden bg-[color:var(--color-bg)] text-[color:var(--color-ink)]">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -top-36 left-[10%] h-[380px] w-[380px] rounded-full bg-[radial-gradient(circle,_rgba(45,212,191,0.22),_transparent_68%)] blur-3xl" />
         <div className="absolute bottom-[-20%] right-[5%] h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle,_rgba(59,130,246,0.2),_transparent_70%)] blur-3xl" />
         <div className="absolute inset-0 opacity-70 [background-image:linear-gradient(rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px)] [background-size:72px_72px]" />
       </div>
 
-      <div className="mx-auto flex min-h-screen max-w-5xl flex-col px-6 pb-12 pt-10">
+      <div className="mx-auto flex h-full max-w-5xl flex-col px-6 pb-8 pt-8">
         <header className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-[11px] uppercase tracking-[0.4em] text-[color:var(--color-muted)]">
@@ -134,8 +134,8 @@ export function NewRanking() {
           </div>
         </header>
 
-        <main className="flex flex-1 items-center justify-center py-10">
-          <section className="w-full max-w-2xl rounded-[28px] border border-[color:var(--color-outline)] bg-[color:var(--color-surface)] p-8 shadow-[var(--shadow-soft)]">
+        <main className="flex min-h-0 flex-1">
+          <section className="mx-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col rounded-[28px] border border-[color:var(--color-outline)] bg-[color:var(--color-surface)] p-8 shadow-[var(--shadow-soft)]">
             {step === "theme" ? (
               <NewRankingForm
                 themeName={themeName}
