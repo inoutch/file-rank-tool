@@ -1,0 +1,40 @@
+@import "sanitize.css";
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --color-bg: #05070d;
+    --color-surface: #0b1220;
+    --color-panel: rgba(15, 23, 42, 0.72);
+    --color-outline: rgba(148, 163, 184, 0.18);
+    --color-ink: #e2e8f0;
+    --color-muted: #94a3b8;
+    --color-subtle: #cbd5f5;
+    --color-accent: #2dd4bf;
+    --color-accent-strong: #f59e0b;
+    --color-row-hover: rgba(45, 212, 191, 0.08);
+    --shadow-soft: 0 30px 70px rgba(2, 6, 23, 0.55);
+  }
+
+  html {
+    font-family: "Space Grotesk", sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: var(--color-bg);
+    text-rendering: optimizeLegibility;
+  }
+
+  code,
+  pre {
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  ::selection {
+    background: rgba(45, 212, 191, 0.25);
+  }
+}
