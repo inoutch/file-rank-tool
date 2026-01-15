@@ -105,12 +105,12 @@ export function NewRanking() {
     if (selected.length === 0) {
       return;
     }
-    await window.fileRank.createRanking({
+    const created = await window.fileRank.createRanking({
       name: themeName.trim(),
       folderPath: selectedFolder,
       selectedExtensions: selected,
     });
-    navigate("/");
+    navigate(`/rank/${created.id}`);
   };
 
   return (

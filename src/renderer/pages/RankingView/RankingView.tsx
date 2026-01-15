@@ -313,7 +313,7 @@ export function RankingView() {
         </main>
       </div>
       {toastMessage ? (
-        <div className="toast-fade pointer-events-none fixed bottom-6 right-6 rounded-full border border-[color:var(--color-outline)] bg-[color:var(--color-surface)] px-4 py-2 text-xs text-[color:var(--color-ink)] shadow-[var(--shadow-soft)]">
+        <div className="toast-fade pointer-events-none fixed right-6 top-6 rounded-full border border-[color:var(--color-outline)] bg-[color:var(--color-surface)] px-4 py-2 text-xs text-[color:var(--color-ink)] shadow-[var(--shadow-soft)]">
           {toastMessage}
         </div>
       ) : null}

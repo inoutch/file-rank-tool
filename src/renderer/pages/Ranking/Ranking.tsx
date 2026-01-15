@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Heart } from "lucide-react";
 import { FilePreview } from "../../components/FilePreview/FilePreview";
@@ -152,7 +152,8 @@ export function Ranking() {
     }
   }, [currentCandidate, currentPivot, displayKey, displayPair.key]);
 
-  const handleDecision = async (side: "left" | "right") => {
+  const handleDecision = useCallback(
+    async (side: "left" | "right") => {
     if (!ranking || !currentPartition || !currentCandidate) {
       return;
     }
@@ -171,7 +172,29 @@ export function Ranking() {
     setRanking((prev) =>
       prev ? { ...prev, matches: [...prev.matches, match] } : prev
     );
-  };
+    },
+    [currentCandidate, currentPartition, displayPair.isPivotLeft, ranking]
+  );
+
+  useEffect(() => {
+    if (!currentPivot || !currentCandidate) {
+      return;
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        handleDecision("left");
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        handleDecision("right");
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [currentCandidate, currentPivot, handleDecision]);
 
   const showEmpty =
     loadStatus === "ready" && ranking && ranking.files.length < 2;
@@ -186,34 +209,14 @@ export function Ranking() {
               {ranking?.name ?? "-"}
             </p>
           </div>
-          <div className="flex flex-col items-end gap-3 text-right">
-            <div className="flex items-center gap-2">
-              <button
-                className="rounded-full border border-[color:var(--color-outline)] px-4 py-2 text-xs font-semibold text-[color:var(--color-muted)] transition hover:border-[rgba(148,163,184,0.6)] hover:text-[color:var(--color-ink)] disabled:cursor-not-allowed disabled:opacity-40"
-                type="button"
-                onClick={async () => {
-                  if (!ranking) {
-                    return;
-                  }
-                  const updated = await window.fileRank.undoLastMatch(
-                    ranking.id
-                  );
-                  if (updated) {
-                    setRanking(updated);
-                  }
-                }}
-                disabled={!ranking || ranking.matches.length === 0}
-              >
-                ひとつ戻す
-              </button>
-              <button
-                className="rounded-full border border-[rgba(148,163,184,0.5)] bg-[rgba(148,163,184,0.08)] px-4 py-2 text-xs font-semibold text-[color:var(--color-muted)] transition hover:border-[rgba(148,163,184,0.8)] hover:text-[color:var(--color-ink)]"
-                type="button"
-                onClick={() => navigate("/")}
-              >
-                中断
-              </button>
-            </div>
+          <div className="flex flex-col items-end gap-2 text-right">
+            <button
+              className="rounded-full border border-[rgba(148,163,184,0.5)] bg-[rgba(148,163,184,0.08)] px-4 py-2 text-xs font-semibold text-[color:var(--color-muted)] transition hover:border-[rgba(148,163,184,0.8)] hover:text-[color:var(--color-ink)]"
+              type="button"
+              onClick={() => navigate("/")}
+            >
+              中断
+            </button>
             <div className="grid gap-1 text-right text-xs text-[color:var(--color-muted)]">
               <div>
                 残り推定 {remainingComparisons.toLocaleString()} 比較
@@ -254,9 +257,24 @@ export function Ranking() {
               <>
                 <div className="flex items-center justify-between text-xs uppercase tracking-[0.32em] text-[color:var(--color-muted)]">
                   <span>Comparison</span>
-                  <span>
-                    {ranking.files.length.toLocaleString()} files
-                  </span>
+                  <button
+                    className="rounded-full border border-[color:var(--color-outline)] px-4 py-1 text-[11px] font-semibold text-[color:var(--color-muted)] transition hover:border-[rgba(148,163,184,0.6)] hover:text-[color:var(--color-ink)] disabled:cursor-not-allowed disabled:opacity-40"
+                    type="button"
+                    onClick={async () => {
+                      if (!ranking) {
+                        return;
+                      }
+                      const updated = await window.fileRank.undoLastMatch(
+                        ranking.id
+                      );
+                      if (updated) {
+                        setRanking(updated);
+                      }
+                    }}
+                    disabled={!ranking || ranking.matches.length === 0}
+                  >
+                    ひとつ戻す
+                  </button>
                 </div>
                 <div className="grid min-h-0 flex-1 grid-cols-2 gap-6">
                   {currentPivot && currentCandidate ? (
@@ -291,8 +309,15 @@ export function Ranking() {
                       />
                     </>
                   ) : (
-                    <div className="col-span-full flex flex-1 items-center justify-center text-sm text-[color:var(--color-muted)]">
-                      ランク付けが完了しました。
+                    <div className="col-span-full flex flex-1 flex-col items-center justify-center gap-4 text-sm text-[color:var(--color-muted)]">
+                      <p>ランク付けが完了しました。</p>
+                      <button
+                        className="rounded-full border border-[rgba(59,130,246,0.6)] bg-[rgba(59,130,246,0.12)] px-5 py-2 text-xs font-semibold text-[rgba(191,219,254,0.95)] transition hover:border-[rgba(59,130,246,0.9)]"
+                        type="button"
+                        onClick={() => navigate(`/rank/${ranking.id}/view`)}
+                      >
+                        ランキングを見る
+                      </button>
                     </div>
                   )}
                 </div>
@@ -305,6 +330,9 @@ export function Ranking() {
                   >
                     <Heart className="h-4 w-4" />
                     左がGOOD
+                    <span className="text-[11px] text-[color:var(--color-muted)]">
+                      ←
+                    </span>
                   </button>
                   <button
                     className="flex w-full items-center justify-center gap-2 rounded-full border border-[rgba(45,212,191,0.5)] bg-[rgba(45,212,191,0.12)] px-6 py-3 text-sm font-semibold text-[color:var(--color-ink)] transition hover:border-[rgba(45,212,191,0.9)] disabled:cursor-not-allowed disabled:opacity-40"
@@ -314,6 +342,9 @@ export function Ranking() {
                   >
                     <Heart className="h-4 w-4" />
                     右がGOOD
+                    <span className="text-[11px] text-[color:var(--color-muted)]">
+                      →
+                    </span>
                   </button>
                 </div>
               </>
